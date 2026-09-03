@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { axiomTokenUrl, gmgnTokenUrl, isTokenAddress } from "@/lib/terminals";
 
 type TokenLinksProps = {
@@ -11,7 +12,7 @@ const IconLink = ({
 }: {
   href: string;
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => (
   <a
     href={href}
@@ -20,7 +21,7 @@ const IconLink = ({
     aria-label={label}
     title={label}
     tabIndex={0}
-    className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] text-[9px] font-bold leading-none ring-1 ring-inset hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CCFF00]"
+    className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] text-[9px] font-bold leading-none hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CCFF00]"
     onClick={(event) => event.stopPropagation()}
     onKeyDown={(event) => {
       if (event.key === "Enter" || event.key === " ") event.stopPropagation();
