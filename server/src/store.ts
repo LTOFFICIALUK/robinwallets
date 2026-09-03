@@ -34,6 +34,7 @@ const emit = (type: string, data: unknown) => {
 
 const persistWallet = async (wallet: WalletRow) => {
   if (!pool) return;
+  try {
   await pool.query(
     `INSERT INTO wallets (
        id, address, address_full, name, twitter, emoji, source, status, score,
@@ -93,10 +94,14 @@ const persistWallet = async (wallet: WalletRow) => {
       wallet.updatedAt,
     ],
   );
+  } catch (error) {
+    console.error("persist wallet failed", wallet.id, error);
+  }
 };
 
 const persistTrade = async (trade: TradeRow) => {
   if (!pool) return;
+  try {
   await pool.query(
     `INSERT INTO trades (
        id, wallet_id, tx_hash, token_address, token_symbol, token_name, action,
@@ -118,15 +123,22 @@ const persistTrade = async (trade: TradeRow) => {
       trade.tradedAt,
     ],
   );
+  } catch (error) {
+    console.error("persist trade failed", trade.id, error);
+  }
 };
 
 const persistEvent = async (event: WalletEventRow) => {
   if (!pool) return;
+  try {
   await pool.query(
     `INSERT INTO wallet_events (wallet_id, kind, from_status, to_status, detail, created_at)
      VALUES ($1,$2,$3,$4,$5,$6)`,
     [event.walletId, event.kind, event.fromStatus, event.toStatus, event.detail, event.createdAt],
   );
+  } catch (error) {
+    console.error("persist event failed", event.walletId, error);
+  }
 };
 
 const pushEvent = (input: {
@@ -149,7 +161,7 @@ const pushEvent = (input: {
   };
   events.unshift(row);
   if (events.length > 400) events.length = 400;
-  void persistEvent(row);
+  void persistWallet(input.wallet).then(() => persistEvent(row));
   emit("event", row);
 };
 
@@ -333,7 +345,7 @@ export const addTrade = (input: {
     input.wallet.lastTradeAt = input.tradedAt;
   }
   input.wallet.updatedAt = nowIso();
-  void persistTrade(trade);
+  void persistWallet(input.wallet).then(() => persistTrade(trade));
   emit("trade", trade);
   return trade;
 };

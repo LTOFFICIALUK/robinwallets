@@ -24,8 +24,6 @@ const start = async () => {
   await migrate();
   await loadFromDb();
   seedKnown();
-  const first = await discoverOnce();
-  console.log("discover", first);
 
   const app = Fastify({ logger: true, trustProxy: true });
   await app.register(cors, {
@@ -97,6 +95,7 @@ const start = async () => {
   });
 
   await app.listen({ port: env.port, host: "0.0.0.0" });
+  app.log.info(`api listening on ${env.port}`);
   const io = new Server(app.server, {
     cors: {
       origin: (origin, callback) => callback(null, isAllowedOrigin(origin)),
@@ -130,6 +129,13 @@ const start = async () => {
   setInterval(() => {
     if (takeDirty()) io.emit("snapshot", snapshot());
   }, 2000);
+
+  try {
+    const first = await discoverOnce();
+    app.log.info({ first }, "initial discover");
+  } catch (error) {
+    app.log.warn({ err: error }, "initial discover failed");
+  }
 };
 
 start().catch((error) => {
