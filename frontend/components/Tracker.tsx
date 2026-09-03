@@ -98,44 +98,18 @@ export const Tracker = () => {
     window.setTimeout(() => setToast(""), 2200);
   };
 
-  const s = data.stats;
-  const stats = [
-    { label: "Good", value: s.good, hint: "Hot, full address" },
-    { label: "Trackable", value: s.trackable, hint: "Ready to follow" },
-    { label: "Candidates", value: s.candidate, hint: "Active, unresolved" },
-    { label: "On your list", value: watched.length, hint: "Watchlist" },
-  ];
-
   return (
     <>
       <HomeHero />
       <section id="board" className="mx-auto max-w-[1500px] scroll-mt-20 px-4 py-8 md:px-6">
-        {!ready ? (
-          <div className="grid gap-3 sm:grid-cols-4" aria-busy="true" aria-label="Loading tracker">
-            {[0, 1, 2, 3].map((item) => (
-              <div key={item} className="h-24 animate-pulse rounded-2xl bg-[#101216] ring-1 ring-[#232830]" />
-            ))}
-          </div>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Tracker stats">
-            {stats.map((item) => (
-              <div key={item.label} className="rounded-2xl bg-[#101216] px-4 py-4 ring-1 ring-[#232830]">
-                <p className="text-sm text-[#8b95a3]">{item.label}</p>
-                <p className="mt-1 font-mono text-2xl tabular-nums">{item.value}</p>
-                <p className="mt-1 text-xs text-[#5d6570]">{item.hint}</p>
-              </div>
-            ))}
-          </div>
-        )}
-
         {error ? (
-          <p className="mt-4 rounded-xl bg-[#ff5a6a]/10 px-3 py-2 text-sm text-[#ff8a96] ring-1 ring-[#ff5a6a]/20" role="alert">
+          <p className="mb-4 rounded-xl bg-[#ff5a6a]/10 px-3 py-2 text-sm text-[#ff8a96] ring-1 ring-[#ff5a6a]/20" role="alert">
             {error}
           </p>
         ) : null}
 
         <form
-          className="mt-6 grid gap-3 rounded-2xl bg-[#101216] p-4 ring-1 ring-[#232830] md:grid-cols-[1fr_200px_auto]"
+          className="grid gap-3 rounded-2xl bg-[#101216] p-4 ring-1 ring-[#232830] md:grid-cols-[1fr_200px_auto]"
           onSubmit={(event) => {
             event.preventDefault();
             void handleImport();
