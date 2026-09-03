@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandMark } from "@/components/BrandMark";
 import { useTracker } from "@/components/TrackerProvider";
-import { BRAND } from "@/lib/brand";
+import { BRAND, X_HANDLE, X_URL } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 
 const LINKS = [
@@ -53,6 +53,18 @@ export const SiteHeader = () => {
             <span className={cn("h-1.5 w-1.5 rounded-full", live ? "animate-pulse bg-[#CCFF00]" : "bg-[#8b95a3]")} />
             {live ? "Live" : "Connecting"}
           </span>
+          <a
+            href={X_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${BRAND} on X`}
+            title={X_HANDLE}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[#8b95a3] hover:bg-white/5 hover:text-white"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.727-8.835L1.254 2.25H8.08l4.261 5.84L18.244 2.25Zm-1.161 17.52h1.833L7.084 3.94H5.117L17.083 19.77Z" />
+            </svg>
+          </a>
         </div>
       </div>
       <nav className="flex gap-1 border-t border-[#1c222b] px-4 py-2 sm:hidden" aria-label="Mobile">

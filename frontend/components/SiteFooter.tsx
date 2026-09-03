@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/BrandMark";
-import { BRAND, CHAIN_ID, CHAIN_LABEL } from "@/lib/brand";
+import { BRAND, CHAIN_ID, CHAIN_LABEL, X_HANDLE, X_URL } from "@/lib/brand";
 
 export const SiteFooter = () => (
   <footer className="mt-auto border-t border-[#1c222b] bg-[#07080a]">
@@ -24,6 +24,15 @@ export const SiteFooter = () => (
           <Link href="/how" className="text-[#c9d2dc] hover:text-white">
             How it works
           </Link>
+          <a
+            href={X_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="text-[#c9d2dc] hover:text-white"
+            aria-label={`${BRAND} on X`}
+          >
+            {X_HANDLE}
+          </a>
         </div>
         <div className="flex flex-col gap-2">
           <p className="text-xs font-medium uppercase tracking-wider text-[#5d6570]">Note</p>
