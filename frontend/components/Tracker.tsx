@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { HomeHero } from "@/components/HomeHero";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useTracker } from "@/components/TrackerProvider";
+import { TokenLinks } from "@/components/TokenLinks";
 import { WalletDrawer } from "@/components/WalletDrawer";
 import { cn } from "@/lib/cn";
 import { downloadJson, toAxiomImport } from "@/lib/export";
@@ -311,9 +312,12 @@ export const Tracker = () => {
                         {trade.action}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm">
-                          {trade.walletName || "Unknown"}{" "}
-                          <span className="text-[#8b95a3]">${trade.tokenSymbol || "???"}</span>
+                        <p className="flex min-w-0 items-center gap-1.5 text-sm">
+                          <span className="truncate">
+                            {trade.walletName || "Unknown"}{" "}
+                            <span className="text-[#8b95a3]">${trade.tokenSymbol || "???"}</span>
+                          </span>
+                          <TokenLinks address={trade.tokenAddress} />
                         </p>
                         <p className="text-[11px] text-[#8b95a3]">
                           {age(trade.tradedAt)} · {fmtMc(trade.marketCapUsd)}

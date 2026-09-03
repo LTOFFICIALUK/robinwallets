@@ -28,6 +28,7 @@ export type TradeRow = {
   id: string;
   walletId: string;
   txHash: string | null;
+  tokenAddress: string | null;
   tokenSymbol: string | null;
   action: "buy" | "sell";
   ethAmount: number;

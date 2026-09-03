@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { StatusBadge } from "@/components/StatusBadge";
+import { TokenLinks } from "@/components/TokenLinks";
 import { age, fmtEth, fmtMc, initials, shortAddr } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { TradeRow, WalletEventRow, WalletRow } from "@/lib/types";
@@ -145,9 +146,12 @@ export const WalletDrawer = ({
               <li className="py-4 text-sm text-[#8b95a3]">No trades on the current tape for this wallet.</li>
             ) : (
               tape.slice(0, 12).map((trade) => (
-                <li key={trade.id} className="flex items-center justify-between rounded-lg px-1 py-1.5 text-sm">
-                  <span className={trade.action === "buy" ? "text-[#CCFF00]" : "text-[#ff8a96]"}>
-                    {trade.action.toUpperCase()} ${trade.tokenSymbol || "???"}
+                <li key={trade.id} className="flex items-center justify-between gap-2 rounded-lg px-1 py-1.5 text-sm">
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <span className={trade.action === "buy" ? "text-[#CCFF00]" : "text-[#ff8a96]"}>
+                      {trade.action.toUpperCase()} ${trade.tokenSymbol || "???"}
+                    </span>
+                    <TokenLinks address={trade.tokenAddress} />
                   </span>
                   <span className="font-mono text-xs text-[#8b95a3]">
                     {trade.ethAmount.toFixed(3)} · {fmtMc(trade.marketCapUsd)} · {age(trade.tradedAt)}
