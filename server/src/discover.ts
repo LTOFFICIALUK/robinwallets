@@ -40,7 +40,7 @@ type BoardRow = {
 
 const fetchJson = async (url: string) => {
   const response = await fetch(url, {
-    headers: { "user-agent": "robinwallets/0.1" },
+    headers: { "user-agent": "plumelist/0.1" },
     signal: AbortSignal.timeout(15000),
   });
   if (!response.ok) throw new Error(`${url} ${response.status}`);

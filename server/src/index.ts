@@ -41,7 +41,7 @@ const start = async () => {
 
   app.get("/health", async () => ({
     ok: true,
-    service: "robinwallets",
+    service: "plumelist",
     chainId: 4663,
     ...stats(),
   }));

@@ -94,7 +94,7 @@ export const Tracker = () => {
       setError("Watch a wallet with a full address first");
       return;
     }
-    downloadJson("robinwallets-axiom.json", payload);
+    downloadJson("plumelist-axiom.json", payload);
     setToast(`Exported ${payload.length} wallets for Axiom`);
     window.setTimeout(() => setToast(""), 2200);
   };

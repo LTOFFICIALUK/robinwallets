@@ -1,4 +1,4 @@
-# robinwallets database
+# PlumeList database
 
 Postgres schema for Robinhood Chain wallet discovery, scoring, and the live trade tape.
 

@@ -1,4 +1,4 @@
-# robinwallets server
+# PlumeList server
 
 Discovery + scoring API for Robinhood Chain wallets.
 

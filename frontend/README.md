@@ -1,6 +1,6 @@
-# robinwallets frontend
+# PlumeList frontend
 
-ASCII tracker UI. Talks to the API at `NEXT_PUBLIC_API_URL` (default `http://localhost:4020`).
+Talks to the API at `NEXT_PUBLIC_API_URL` (default `http://localhost:4020`).
 
 ```bash
 npm install

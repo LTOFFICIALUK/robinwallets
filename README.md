@@ -1,6 +1,6 @@
-# robinwallets
+# PlumeList
 
-ASCII wallet tracker for Robinhood Chain (chain id 4663). Discovers high-frequency traders, promotes them to **trackable** / **good** as activity lands, and streams the tape.
+Wallet tracker for Robinhood Chain (chain id 4663). Discovers high-frequency traders, promotes them to **trackable** / **good** as activity lands, and streams the tape.
 
 | Package | Role |
 | --- | --- |

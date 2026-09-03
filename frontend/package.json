@@ -1,5 +1,5 @@
 {
-  "name": "robinwallets-web",
+  "name": "plumelist-web",
   "version": "0.1.0",
   "private": true,
   "engines": { "node": ">=20" },
