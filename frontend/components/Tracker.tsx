@@ -125,9 +125,8 @@ export const Tracker = () => {
             <input
               value={address}
               onChange={(event) => setAddress(event.target.value)}
-              placeholder="0x…"
               spellCheck={false}
-              className="mt-1.5 w-full rounded-xl bg-[#07080a] px-3 py-2.5 text-sm outline-none ring-1 ring-[#232830] placeholder:text-[#5d6570] focus:ring-[#CCFF00]/50"
+              className="mt-1.5 w-full rounded-xl bg-[#07080a] px-3 py-2.5 text-sm outline-none ring-1 ring-[#232830] focus:ring-[#CCFF00]/50"
               aria-label="Robinhood wallet address"
             />
           </label>
@@ -136,8 +135,7 @@ export const Tracker = () => {
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Optional name"
-              className="mt-1.5 w-full rounded-xl bg-[#07080a] px-3 py-2.5 text-sm outline-none ring-1 ring-[#232830] placeholder:text-[#5d6570] focus:ring-[#CCFF00]/50"
+              className="mt-1.5 w-full rounded-xl bg-[#07080a] px-3 py-2.5 text-sm outline-none ring-1 ring-[#232830] focus:ring-[#CCFF00]/50"
               aria-label="Wallet label"
             />
           </label>
@@ -154,8 +152,7 @@ export const Tracker = () => {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search traders"
-            className="min-w-[200px] flex-1 rounded-xl bg-[#101216] px-3 py-2 text-sm outline-none ring-1 ring-[#232830] placeholder:text-[#5d6570] focus:ring-[#CCFF00]/50"
+            className="min-w-[200px] flex-1 rounded-xl bg-[#101216] px-3 py-2 text-sm outline-none ring-1 ring-[#232830] focus:ring-[#CCFF00]/50"
             aria-label="Filter wallets"
           />
           <div className="flex flex-wrap gap-1" role="tablist" aria-label="Status filter">

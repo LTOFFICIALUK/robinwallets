@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Plume X banner 3:1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 1500px;
+        height: 500px;
+        overflow: hidden;
+        background: #ccff00;
+      }
+
+      .banner {
+        position: relative;
+        width: 1500px;
+        height: 500px;
+        background: #ccff00;
+        overflow: hidden;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #07080a;
+      }
+
+      /* X mobile/profile crops the outer edges. Keep all copy inside this inset. */
+      .safe {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 96px 128px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        max-width: 920px;
+      }
+
+      .mark {
+        width: 38px;
+        height: 50px;
+        margin-bottom: 22px;
+        display: block;
+      }
+
+      h1 {
+        font-size: 46px;
+        line-height: 1.08;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        margin-bottom: 14px;
+      }
+
+      p {
+        font-size: 17px;
+        line-height: 1.4;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        max-width: 620px;
+        margin-bottom: 22px;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #07080a;
+        color: #ccff00;
+        border-radius: 10px;
+        padding: 9px 16px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+
+      .watermark {
+        position: absolute;
+        right: -90px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 720px;
+        height: auto;
+        opacity: 0.16;
+        pointer-events: none;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner" id="banner">
+      <svg class="watermark" viewBox="0 0 476 627" aria-hidden="true">
+        <g transform="translate(0 627) scale(0.01 -0.01)" fill="#07080a">
+          <path
+            d="M17950 61795 c-8087 -801 -13113 -3503 -14547 -7820 l-269 -810 -802 -416 c-807 -418 -1532 -912 -1532 -1043 0 -39 305 -118 678 -175 1305 -202 2624 -881 3654 -1882 1204 -1169 1906 -2502 2773 -5268 2528 -8062 4315 -12006 7672 -16931 1542 -2263 2664 -3729 3082 -4029 1753 -1255 4857 -2944 8491 -4622 1891 -872 -1510 -26 -4983 1240 -540 197 -968 317 -950 267 148 -407 4337 -4763 4933 -5129 915 -562 3982 -1675 6150 -2231 1733 -444 1577 -522 -1075 -536 -1004 -6 -1824 -44 -1824 -85 3 -181 1925 -1724 3683 -2957 1682 -1179 3278 -2182 5766 -3622 3829 -2216 6341 -3785 7464 -4662 513 -400 519 -378 140 507 -1350 3154 -4556 7623 -8756 12209 -580 632 -1119 1240 -1198 1350 l-144 200 247 -206 c1050 -875 2385 -2101 3722 -3420 866 -854 1575 -1522 1575 -1485 0 117 -378 817 -963 1785 -3025 5006 -6958 9346 -13587 14993 -7759 6610 -8577 7406 -10180 9895 -1282 1993 -1807 3305 -2775 6938 -1137 4269 -1559 5344 -2633 6718 -1592 2034 -3378 2871 -6142 2878 l-1630 4 278 222 c586 468 3414 1802 4782 2255 3234 1072 5957 1507 9450 1510 9013 7 15682 -3704 18136 -10091 761 -1980 972 -4928 491 -6853 -902 -3607 -3244 -6598 -6374 -8141 -1563 -770 -4016 -1246 -5689 -1103 -920 78 -925 14 -38 -481 3760 -2101 8758 -2188 12614 -220 3597 1836 6237 5457 7072 9702 218 1105 186 4962 -49 6050 -1818 8402 -8209 13719 -18413 15319 -1473 231 -6639 341 -8300 176z"
+          />
+        </g>
+      </svg>
+      <div class="safe">
+        <svg class="mark" viewBox="0 0 476 627" role="img" aria-label="Plume">
+          <g transform="translate(0 627) scale(0.01 -0.01)" fill="#07080a">
+            <path
+              d="M17950 61795 c-8087 -801 -13113 -3503 -14547 -7820 l-269 -810 -802 -416 c-807 -418 -1532 -912 -1532 -1043 0 -39 305 -118 678 -175 1305 -202 2624 -881 3654 -1882 1204 -1169 1906 -2502 2773 -5268 2528 -8062 4315 -12006 7672 -16931 1542 -2263 2664 -3729 3082 -4029 1753 -1255 4857 -2944 8491 -4622 1891 -872 -1510 -26 -4983 1240 -540 197 -968 317 -950 267 148 -407 4337 -4763 4933 -5129 915 -562 3982 -1675 6150 -2231 1733 -444 1577 -522 -1075 -536 -1004 -6 -1824 -44 -1824 -85 3 -181 1925 -1724 3683 -2957 1682 -1179 3278 -2182 5766 -3622 3829 -2216 6341 -3785 7464 -4662 513 -400 519 -378 140 507 -1350 3154 -4556 7623 -8756 12209 -580 632 -1119 1240 -1198 1350 l-144 200 247 -206 c1050 -875 2385 -2101 3722 -3420 866 -854 1575 -1522 1575 -1485 0 117 -378 817 -963 1785 -3025 5006 -6958 9346 -13587 14993 -7759 6610 -8577 7406 -10180 9895 -1282 1993 -1807 3305 -2775 6938 -1137 4269 -1559 5344 -2633 6718 -1592 2034 -3378 2871 -6142 2878 l-1630 4 278 222 c586 468 3414 1802 4782 2255 3234 1072 5957 1507 9450 1510 9013 7 15682 -3704 18136 -10091 761 -1980 972 -4928 491 -6853 -902 -3607 -3244 -6598 -6374 -8141 -1563 -770 -4016 -1246 -5689 -1103 -920 78 -925 14 -38 -481 3760 -2101 8758 -2188 12614 -220 3597 1836 6237 5457 7072 9702 218 1105 186 4962 -49 6050 -1818 8402 -8209 13719 -18413 15319 -1473 231 -6639 341 -8300 176z"
+            />
+          </g>
+        </svg>
+        <h1>Stop guessing who to copy.</h1>
+        <p>
+          Plume ranks live wallets on Robinhood Chain by what they actually do
+          on-chain — not by who shouts loudest.
+        </p>
+        <span class="cta">plumelist.fun</span>
+      </div>
+    </div>
+  </body>
+</html>
