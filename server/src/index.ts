@@ -3,7 +3,7 @@ import cors from "@fastify/cors";
 import { Server } from "socket.io";
 import { assertProductionConfig, env, isAllowedOrigin } from "./env";
 import { migrate } from "./db";
-import { discoverOnce, ingestBoard, ingestFeed } from "./discover";
+import { discoverOnce, enrichSocialProfiles, ingestBoard, ingestFeed } from "./discover";
 import {
   listEvents,
   listTape,
@@ -126,6 +126,11 @@ const start = async () => {
 
   setInterval(() => void feedLoop(), env.feedMs);
   setInterval(() => void boardLoop(), env.boardMs);
+  setInterval(() => {
+    void enrichSocialProfiles(16).catch((error) => {
+      app.log.warn({ err: error }, "social enrich failed");
+    });
+  }, 120000);
   setInterval(() => {
     if (takeDirty()) io.emit("snapshot", snapshot());
   }, 2000);

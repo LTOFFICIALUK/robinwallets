@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS wallets (
   address_full BOOLEAN NOT NULL DEFAULT FALSE,
   name TEXT NOT NULL DEFAULT '',
   twitter TEXT,
+  avatar TEXT,
+  fomo_url TEXT,
   emoji TEXT NOT NULL DEFAULT '*',
   source TEXT NOT NULL DEFAULT 'discover',
   status TEXT NOT NULL DEFAULT 'seen'
@@ -34,6 +36,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS wallets_address_idx ON wallets (lower(address)
 CREATE INDEX IF NOT EXISTS wallets_status_idx ON wallets (status, score DESC);
 CREATE INDEX IF NOT EXISTS wallets_name_idx ON wallets (lower(name));
 CREATE INDEX IF NOT EXISTS wallets_last_trade_idx ON wallets (last_trade_at DESC);
+
+ALTER TABLE wallets ADD COLUMN IF NOT EXISTS avatar TEXT;
+ALTER TABLE wallets ADD COLUMN IF NOT EXISTS fomo_url TEXT;
 
 CREATE TABLE IF NOT EXISTS trades (
   id TEXT PRIMARY KEY,

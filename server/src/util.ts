@@ -21,6 +21,43 @@ export const normalizeName = (value: string) => value.trim().replace(/\s+/g, " "
 
 export const nameKey = (value: string) => normalizeName(value).toLowerCase();
 
+export const twitterHandle = (value?: string | null) => {
+  if (!value) return "";
+  const raw = value.trim();
+  if (!raw) return "";
+  try {
+    if (raw.startsWith("http://") || raw.startsWith("https://")) {
+      const url = new URL(raw);
+      const host = url.hostname.replace(/^www\./, "");
+      if (host !== "x.com" && host !== "twitter.com") return "";
+      const handle = url.pathname.split("/").filter(Boolean)[0] || "";
+      return handle.replace(/^@/, "").trim();
+    }
+  } catch {
+    /* fall through */
+  }
+  return raw.replace(/^@/, "").replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, "").split(/[/?#]/)[0].trim();
+};
+
+export const normalizeTwitterUrl = (value?: string | null) => {
+  const handle = twitterHandle(value);
+  return handle ? `https://x.com/${handle}` : null;
+};
+
+export const avatarFromTwitter = (value?: string | null) => {
+  const handle = twitterHandle(value);
+  return handle ? `https://unavatar.io/twitter/${encodeURIComponent(handle)}` : null;
+};
+
+export const fomoProfileUrl = (value?: string | null) => {
+  const handle = String(value || "")
+    .trim()
+    .replace(/^@/, "")
+    .split(/[/?#\s]/)[0];
+  if (!handle || handle.includes("...")) return null;
+  return `https://fomo.family/profile/${encodeURIComponent(handle)}`;
+};
+
 export const matchesTruncated = (full: string, truncated: string) => {
   if (!isFullAddress(full) || !truncated.includes("...")) return false;
   const [head, tail] = truncated.split("...");

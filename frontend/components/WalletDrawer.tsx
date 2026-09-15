@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 import { StatusBadge } from "@/components/StatusBadge";
+import { SocialLinks } from "@/components/SocialLinks";
 import { TokenLinks } from "@/components/TokenLinks";
-import { age, fmtEth, fmtMc, initials, shortAddr } from "@/lib/format";
+import { WalletAvatar } from "@/components/WalletAvatar";
+import { age, fmtEth, fmtMc, shortAddr } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { TradeRow, WalletEventRow, WalletRow } from "@/lib/types";
 
@@ -47,13 +49,18 @@ export const WalletDrawer = ({
       >
         <div className="flex items-start justify-between gap-3 border-b border-[#1c222b] px-5 py-4">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1a1f27] font-mono text-xs text-[#9cc4ff]">
-              {initials(wallet.name || "??")}
-            </span>
+            <WalletAvatar name={wallet.name || "??"} avatar={wallet.avatar} className="h-11 w-11 text-xs" />
             <div className="min-w-0">
-              <h2 id="wallet-drawer-title" className="truncate text-base font-semibold">
-                {wallet.name || "Unnamed wallet"}
-              </h2>
+              <div className="flex min-w-0 items-center gap-2">
+                <h2 id="wallet-drawer-title" className="truncate text-base font-semibold">
+                  {wallet.name || "Unnamed wallet"}
+                </h2>
+                <SocialLinks
+                  name={wallet.name || "wallet"}
+                  twitter={wallet.twitter}
+                  fomoUrl={wallet.fomoUrl}
+                />
+              </div>
               <p className="mt-0.5 text-xs text-[#8b95a3]">{wallet.source} · last trade {age(wallet.lastTradeAt)}</p>
             </div>
           </div>
@@ -72,11 +79,6 @@ export const WalletDrawer = ({
             <StatusBadge status={wallet.status} />
             {wallet.watched ? (
               <span className="rounded-full bg-[#CCFF00]/15 px-2 py-0.5 text-[11px] text-[#CCFF00]">On your list</span>
-            ) : null}
-            {!wallet.addressFull ? (
-              <span className="rounded-full bg-[#ffb020]/15 px-2 py-0.5 text-[11px] text-[#ffc85a]">
-                Address still truncated
-              </span>
             ) : null}
           </div>
 
@@ -121,16 +123,6 @@ export const WalletDrawer = ({
             >
               {wallet.watched ? "Remove from list" : "Add to watchlist"}
             </button>
-            {wallet.twitter ? (
-              <a
-                href={wallet.twitter}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-xl px-3 py-2 text-sm ring-1 ring-[#232830] hover:bg-white/5"
-              >
-                Open X
-              </a>
-            ) : null}
             <button
               type="button"
               className="rounded-xl px-3 py-2 text-sm text-[#8b95a3] ring-1 ring-[#232830] hover:text-[#ff8a96]"

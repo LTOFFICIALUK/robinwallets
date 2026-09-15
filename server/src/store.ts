@@ -9,6 +9,8 @@ import {
   newId,
   normalizeAddress,
   normalizeName,
+  normalizeTwitterUrl,
+  avatarFromTwitter,
   nowIso,
   tradeId,
 } from "./util";
@@ -37,17 +39,19 @@ const persistWallet = async (wallet: WalletRow) => {
   try {
   await pool.query(
     `INSERT INTO wallets (
-       id, address, address_full, name, twitter, emoji, source, status, score,
+       id, address, address_full, name, twitter, avatar, fomo_url, emoji, source, status, score,
        trades_24h, buys_24h, sells_24h, buy_eth, sell_eth, net_eth, tokens_traded,
        last_trade_at, first_seen_at, tracked_at, good_at, watched, hidden, notes, created_at, updated_at
      ) VALUES (
-       $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25
+       $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27
      )
      ON CONFLICT (id) DO UPDATE SET
        address = EXCLUDED.address,
        address_full = EXCLUDED.address_full,
        name = EXCLUDED.name,
        twitter = COALESCE(EXCLUDED.twitter, wallets.twitter),
+       avatar = COALESCE(EXCLUDED.avatar, wallets.avatar),
+       fomo_url = COALESCE(EXCLUDED.fomo_url, wallets.fomo_url),
        emoji = EXCLUDED.emoji,
        source = EXCLUDED.source,
        status = EXCLUDED.status,
@@ -72,6 +76,8 @@ const persistWallet = async (wallet: WalletRow) => {
       wallet.addressFull,
       wallet.name,
       wallet.twitter,
+      wallet.avatar,
+      wallet.fomoUrl,
       wallet.emoji,
       wallet.source,
       wallet.status,
@@ -187,6 +193,8 @@ export const upsertWallet = (input: {
   address?: string;
   name?: string;
   twitter?: string | null;
+  avatar?: string | null;
+  fomoUrl?: string | null;
   emoji?: string;
   source: string;
   watched?: boolean;
@@ -194,6 +202,9 @@ export const upsertWallet = (input: {
 }) => {
   const name = normalizeName(input.name || "");
   const address = input.address ? normalizeAddress(input.address) : "";
+  const twitter = normalizeTwitterUrl(input.twitter) || null;
+  const avatar = (input.avatar || "").trim() || avatarFromTwitter(twitter) || null;
+  const fomoUrl = (input.fomoUrl || "").trim() || null;
   const named = Boolean(name && name !== "unnamed");
   let wallet = (address && findByAddress(address)) || (named ? findByName(name) : null);
   const created = !wallet;
@@ -204,7 +215,9 @@ export const upsertWallet = (input: {
       address: address || `pending:${newId().slice(0, 8)}`,
       addressFull: Boolean(address && isFullAddress(address)),
       name: name || "unnamed",
-      twitter: input.twitter || null,
+      twitter,
+      avatar,
+      fomoUrl,
       emoji: input.emoji || "*",
       source: input.source,
       status: "seen",
@@ -245,7 +258,13 @@ export const upsertWallet = (input: {
   if (name && (!wallet.name || wallet.name === "unnamed" || nameKey(wallet.name) === nameKey(name))) {
     wallet.name = name;
   }
-  if (input.twitter) wallet.twitter = input.twitter;
+  if (twitter) wallet.twitter = twitter;
+  if (avatar && (!wallet.avatar || wallet.avatar.startsWith("https://unavatar.io/"))) {
+    wallet.avatar = avatar;
+  } else if (!wallet.avatar && twitter) {
+    wallet.avatar = avatarFromTwitter(twitter);
+  }
+  if (fomoUrl) wallet.fomoUrl = fomoUrl;
   if (input.emoji) wallet.emoji = input.emoji;
   if (input.watched) wallet.watched = true;
   if (input.notes) wallet.notes = input.notes;
@@ -478,6 +497,8 @@ export const loadFromDb = async () => {
       addressFull: row.address_full,
       name: row.name,
       twitter: row.twitter,
+      avatar: row.avatar || avatarFromTwitter(row.twitter),
+      fomoUrl: row.fomo_url || null,
       emoji: row.emoji,
       source: row.source,
       status: row.status,

@@ -6,6 +6,8 @@ export type WalletRow = {
   addressFull: boolean;
   name: string;
   twitter: string | null;
+  avatar: string | null;
+  fomoUrl: string | null;
   emoji: string;
   source: string;
   status: WalletStatus;

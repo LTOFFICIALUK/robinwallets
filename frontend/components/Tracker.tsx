@@ -2,13 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { HomeHero } from "@/components/HomeHero";
+import { SocialLinks } from "@/components/SocialLinks";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useTracker } from "@/components/TrackerProvider";
 import { TokenLinks } from "@/components/TokenLinks";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import { WalletDrawer } from "@/components/WalletDrawer";
 import { cn } from "@/lib/cn";
 import { downloadJson, toAxiomImport } from "@/lib/export";
-import { age, fmtEth, fmtMc, initials, shortAddr } from "@/lib/format";
+import { age, fmtEth, fmtMc, shortAddr } from "@/lib/format";
 import type { WalletStatus } from "@/lib/types";
 
 const STATUS: Array<WalletStatus | "all"> = ["all", "good", "trackable", "candidate", "seen", "stale"];
@@ -241,15 +243,17 @@ export const Tracker = () => {
                       >
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1a1f27] font-mono text-[11px] text-[#9cc4ff]">
-                              {initials(wallet.name || "??")}
-                            </span>
+                            <WalletAvatar name={wallet.name || "??"} avatar={wallet.avatar} />
                             <div className="min-w-0">
-                              <p className="truncate font-medium">{wallet.name || "Unnamed"}</p>
-                              <p className="font-mono text-xs text-[#8b95a3]">
-                                {shortAddr(wallet.address)}
-                                {wallet.addressFull ? "" : " · truncated"}
-                              </p>
+                              <div className="flex min-w-0 items-center gap-2">
+                                <p className="truncate font-medium">{wallet.name || "Unnamed"}</p>
+                                <SocialLinks
+                                  name={wallet.name || "wallet"}
+                                  twitter={wallet.twitter}
+                                  fomoUrl={wallet.fomoUrl}
+                                />
+                              </div>
+                              <p className="font-mono text-xs text-[#8b95a3]">{shortAddr(wallet.address)}</p>
                             </div>
                           </div>
                         </td>
