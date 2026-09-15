@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import { HomeHero } from "@/components/HomeHero";
 import { Pager } from "@/components/Pager";
 import { SocialLinks } from "@/components/SocialLinks";
@@ -12,11 +12,14 @@ import { WalletDrawer } from "@/components/WalletDrawer";
 import { cn } from "@/lib/cn";
 import { downloadJson, toAxiomImport } from "@/lib/export";
 import { age, fmtEth, fmtMc, shortAddr } from "@/lib/format";
-import type { WalletStatus } from "@/lib/types";
+import type { WalletRow, WalletStatus } from "@/lib/types";
 
 const STATUS: Array<WalletStatus | "all"> = ["all", "good", "trackable", "candidate", "seen", "stale"];
 const WALLET_PAGE_SIZE = 20;
 const TAPE_PAGE_SIZE = 24;
+
+type SortKey = "name" | "status" | "score" | "trades24h" | "netEth" | "lastTradeAt";
+type SortDir = "asc" | "desc";
 
 const RANK: Record<WalletStatus, number> = {
   good: 4,
@@ -24,6 +27,74 @@ const RANK: Record<WalletStatus, number> = {
   candidate: 2,
   seen: 1,
   stale: 0,
+};
+
+const SORT_DEFAULT: Record<SortKey, SortDir> = {
+  name: "asc",
+  status: "desc",
+  score: "desc",
+  trades24h: "desc",
+  netEth: "desc",
+  lastTradeAt: "desc",
+};
+
+const compareWallets = (a: WalletRow, b: WalletRow, key: SortKey, dir: SortDir) => {
+  const flip = dir === "asc" ? 1 : -1;
+  if (key === "name") {
+    return flip * (a.name || "").localeCompare(b.name || "", undefined, { sensitivity: "base" });
+  }
+  if (key === "status") return flip * (RANK[a.status] - RANK[b.status]);
+  if (key === "score") return flip * (a.score - b.score);
+  if (key === "trades24h") return flip * (a.trades24h - b.trades24h);
+  if (key === "netEth") return flip * (a.netEth - b.netEth);
+  return flip * (a.lastTradeAt || "").localeCompare(b.lastTradeAt || "");
+};
+
+const SortHeader = ({
+  label,
+  column,
+  sortKey,
+  sortDir,
+  align = "left",
+  onSort,
+}: {
+  label: string;
+  column: SortKey;
+  sortKey: SortKey;
+  sortDir: SortDir;
+  align?: "left" | "right";
+  onSort: (column: SortKey) => void;
+}) => {
+  const active = sortKey === column;
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onSort(column);
+    }
+  };
+  return (
+    <th
+      className={cn("px-3 py-3 font-medium first:px-4", align === "right" && "text-right")}
+      aria-sort={active ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
+    >
+      <button
+        type="button"
+        className={cn(
+          "inline-flex items-center gap-1 hover:text-white",
+          align === "right" && "w-full justify-end",
+          active ? "text-white" : "text-[#8b95a3]",
+        )}
+        onClick={() => onSort(column)}
+        onKeyDown={handleKeyDown}
+        aria-label={`Sort by ${label}`}
+      >
+        {label}
+        <span className="font-mono text-[10px] text-[#5d6570]" aria-hidden="true">
+          {active ? (sortDir === "asc" ? "↑" : "↓") : ""}
+        </span>
+      </button>
+    </th>
+  );
 };
 
 export const Tracker = () => {
@@ -38,6 +109,18 @@ export const Tracker = () => {
   const [toast, setToast] = useState("");
   const [walletPage, setWalletPage] = useState(1);
   const [tapePage, setTapePage] = useState(1);
+  const [sortKey, setSortKey] = useState<SortKey>("score");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+
+  const handleSort = (column: SortKey) => {
+    if (sortKey === column) {
+      setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(column);
+      setSortDir(SORT_DEFAULT[column]);
+    }
+    setWalletPage(1);
+  };
 
   const rows = useMemo(() => {
     return data.wallets
@@ -52,13 +135,8 @@ export const Tracker = () => {
           (wallet.twitter || "").toLowerCase().includes(q)
         );
       })
-      .sort((a, b) => {
-        if (a.watched !== b.watched) return a.watched ? -1 : 1;
-        if (RANK[a.status] !== RANK[b.status]) return RANK[b.status] - RANK[a.status];
-        if (b.score !== a.score) return b.score - a.score;
-        return b.trades24h - a.trades24h;
-      });
-  }, [data.wallets, filter, query, watchOnly]);
+      .sort((a, b) => compareWallets(a, b, sortKey, sortDir));
+  }, [data.wallets, filter, query, sortDir, sortKey, watchOnly]);
 
   useEffect(() => {
     setWalletPage(1);
@@ -234,12 +312,39 @@ export const Tracker = () => {
               <table className="w-full min-w-[780px] border-collapse text-left text-sm">
                 <thead className="sticky top-0 bg-[#14181e] text-xs text-[#8b95a3]">
                   <tr>
-                    <th className="px-4 py-3 font-medium">Trader</th>
-                    <th className="px-3 py-3 font-medium">Status</th>
-                    <th className="px-3 py-3 text-right font-medium">Score</th>
-                    <th className="px-3 py-3 text-right font-medium">24h</th>
-                    <th className="px-3 py-3 text-right font-medium">Net</th>
-                    <th className="px-3 py-3 font-medium">Last</th>
+                    <SortHeader label="Trader" column="name" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                    <SortHeader label="Status" column="status" sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
+                    <SortHeader
+                      label="Score"
+                      column="score"
+                      sortKey={sortKey}
+                      sortDir={sortDir}
+                      align="right"
+                      onSort={handleSort}
+                    />
+                    <SortHeader
+                      label="24h"
+                      column="trades24h"
+                      sortKey={sortKey}
+                      sortDir={sortDir}
+                      align="right"
+                      onSort={handleSort}
+                    />
+                    <SortHeader
+                      label="Net"
+                      column="netEth"
+                      sortKey={sortKey}
+                      sortDir={sortDir}
+                      align="right"
+                      onSort={handleSort}
+                    />
+                    <SortHeader
+                      label="Last"
+                      column="lastTradeAt"
+                      sortKey={sortKey}
+                      sortDir={sortDir}
+                      onSort={handleSort}
+                    />
                     <th className="px-4 py-3 font-medium"> </th>
                   </tr>
                 </thead>
