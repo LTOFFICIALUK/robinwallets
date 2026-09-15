@@ -429,73 +429,50 @@ export const Tracker = () => {
             />
           </section>
 
-          <div className="grid gap-4">
-            <section className="flex min-h-[520px] flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
-              <div className="border-b border-[#1c222b] px-4 py-3">
-                <h2 className="text-sm font-medium">Live tape</h2>
-                <p className="text-xs text-[#8b95a3]">Buys and sells as they hit the feed</p>
-              </div>
-              <ul className="min-h-0 flex-1 overflow-auto px-2 py-2">
-                {data.tape.length === 0 ? (
-                  <li className="px-2 py-8 text-center text-sm text-[#8b95a3]">Waiting for the next trade…</li>
-                ) : (
-                  pagedTape.map((trade) => (
-                    <li key={trade.id} className="flex items-center gap-2 rounded-xl px-2 py-1.5">
-                      <span
-                        className={cn(
-                          "w-11 shrink-0 rounded-md py-0.5 text-center text-[11px] font-semibold uppercase",
-                          trade.action === "buy" ? "bg-[#CCFF00]/15 text-[#CCFF00]" : "bg-[#ff5a6a]/15 text-[#ff8a96]",
-                        )}
-                      >
-                        {trade.action}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="flex min-w-0 items-center gap-1.5 text-sm">
-                          <span className="truncate">
-                            {trade.walletName || "Unknown"}{" "}
-                            <span className="text-[#8b95a3]">${trade.tokenSymbol || "???"}</span>
-                          </span>
-                          <TokenLinks address={trade.tokenAddress} />
-                        </p>
-                        <p className="text-[11px] text-[#8b95a3]">
-                          {age(trade.tradedAt)} · {fmtMc(trade.marketCapUsd)}
-                        </p>
-                      </div>
-                      <span className="font-mono text-xs tabular-nums">{trade.ethAmount.toFixed(3)}</span>
-                    </li>
-                  ))
-                )}
-              </ul>
-              <Pager
-                page={tapePage}
-                pageCount={tapePageCount}
-                total={data.tape.length}
-                label="trades"
-                onPage={setTapePage}
-              />
-            </section>
-            <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
-              <div className="border-b border-[#1c222b] px-4 py-3">
-                <h2 className="text-sm font-medium">Promotions</h2>
-                <p className="text-xs text-[#8b95a3]">When wallets become trackable or good</p>
-              </div>
-              <ul className="flex-1 overflow-auto px-4 py-2">
-                {data.events.length === 0 ? (
-                  <li className="py-8 text-center text-sm text-[#8b95a3]">No status changes yet.</li>
-                ) : (
-                  data.events.slice(0, 16).map((event) => (
-                    <li key={event.id} className="border-b border-[#1c222b] py-2.5 last:border-0">
-                      <p className="text-sm">{event.walletName || "Wallet"}</p>
-                      <p className="text-xs capitalize text-[#8b95a3]">
-                        {age(event.createdAt)} · {event.kind}
-                        {event.fromStatus && event.toStatus ? ` · ${event.fromStatus} → ${event.toStatus}` : ""}
+          <section className="flex min-h-[520px] flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
+            <div className="border-b border-[#1c222b] px-4 py-3">
+              <h2 className="text-sm font-medium">Live tape</h2>
+              <p className="text-xs text-[#8b95a3]">Buys and sells as they hit the feed</p>
+            </div>
+            <ul className="min-h-0 flex-1 overflow-auto px-2 py-2">
+              {data.tape.length === 0 ? (
+                <li className="px-2 py-8 text-center text-sm text-[#8b95a3]">Waiting for the next trade…</li>
+              ) : (
+                pagedTape.map((trade) => (
+                  <li key={trade.id} className="flex items-center gap-2 rounded-xl px-2 py-1.5">
+                    <span
+                      className={cn(
+                        "w-11 shrink-0 rounded-md py-0.5 text-center text-[11px] font-semibold uppercase",
+                        trade.action === "buy" ? "bg-[#CCFF00]/15 text-[#CCFF00]" : "bg-[#ff5a6a]/15 text-[#ff8a96]",
+                      )}
+                    >
+                      {trade.action}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="flex min-w-0 items-center gap-1.5 text-sm">
+                        <span className="truncate">
+                          {trade.walletName || "Unknown"}{" "}
+                          <span className="text-[#8b95a3]">${trade.tokenSymbol || "???"}</span>
+                        </span>
+                        <TokenLinks address={trade.tokenAddress} />
                       </p>
-                    </li>
-                  ))
-                )}
-              </ul>
-            </section>
-          </div>
+                      <p className="text-[11px] text-[#8b95a3]">
+                        {age(trade.tradedAt)} · {fmtMc(trade.marketCapUsd)}
+                      </p>
+                    </div>
+                    <span className="font-mono text-xs tabular-nums">{trade.ethAmount.toFixed(3)}</span>
+                  </li>
+                ))
+              )}
+            </ul>
+            <Pager
+              page={tapePage}
+              pageCount={tapePageCount}
+              total={data.tape.length}
+              label="trades"
+              onPage={setTapePage}
+            />
+          </section>
         </div>
       </section>
 
