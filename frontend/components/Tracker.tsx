@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { HomeHero } from "@/components/HomeHero";
+import { Pager } from "@/components/Pager";
 import { SocialLinks } from "@/components/SocialLinks";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useTracker } from "@/components/TrackerProvider";
@@ -14,6 +15,8 @@ import { age, fmtEth, fmtMc, shortAddr } from "@/lib/format";
 import type { WalletStatus } from "@/lib/types";
 
 const STATUS: Array<WalletStatus | "all"> = ["all", "good", "trackable", "candidate", "seen", "stale"];
+const WALLET_PAGE_SIZE = 20;
+const TAPE_PAGE_SIZE = 24;
 
 const RANK: Record<WalletStatus, number> = {
   good: 4,
@@ -33,6 +36,8 @@ export const Tracker = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [copied, setCopied] = useState("");
   const [toast, setToast] = useState("");
+  const [walletPage, setWalletPage] = useState(1);
+  const [tapePage, setTapePage] = useState(1);
 
   const rows = useMemo(() => {
     return data.wallets
@@ -54,6 +59,23 @@ export const Tracker = () => {
         return b.trades24h - a.trades24h;
       });
   }, [data.wallets, filter, query, watchOnly]);
+
+  useEffect(() => {
+    setWalletPage(1);
+  }, [filter, query, watchOnly]);
+
+  const walletPageCount = Math.max(1, Math.ceil(rows.length / WALLET_PAGE_SIZE));
+  const pagedRows = rows.slice((walletPage - 1) * WALLET_PAGE_SIZE, walletPage * WALLET_PAGE_SIZE);
+  const tapePageCount = Math.max(1, Math.ceil(data.tape.length / TAPE_PAGE_SIZE));
+  const pagedTape = data.tape.slice((tapePage - 1) * TAPE_PAGE_SIZE, tapePage * TAPE_PAGE_SIZE);
+
+  useEffect(() => {
+    if (walletPage > walletPageCount) setWalletPage(walletPageCount);
+  }, [walletPage, walletPageCount]);
+
+  useEffect(() => {
+    if (tapePage > tapePageCount) setTapePage(tapePageCount);
+  }, [tapePage, tapePageCount]);
 
   const selected = data.wallets.find((wallet) => wallet.id === selectedId) || null;
   const selectedTape = data.tape.filter(
@@ -203,8 +225,11 @@ export const Tracker = () => {
           </button>
         </div>
 
-        <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(300px,0.85fr)]">
-          <section aria-label="Wallet table" className="overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
+        <div className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.85fr)]">
+          <section
+            aria-label="Wallet table"
+            className="flex flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]"
+          >
             <div className="overflow-auto">
               <table className="w-full min-w-[780px] border-collapse text-left text-sm">
                 <thead className="sticky top-0 bg-[#14181e] text-xs text-[#8b95a3]">
@@ -232,7 +257,7 @@ export const Tracker = () => {
                       </td>
                     </tr>
                   ) : (
-                    rows.map((wallet) => (
+                    pagedRows.map((wallet) => (
                       <tr
                         key={wallet.id}
                         className={cn(
@@ -290,19 +315,26 @@ export const Tracker = () => {
                 </tbody>
               </table>
             </div>
+            <Pager
+              page={walletPage}
+              pageCount={walletPageCount}
+              total={rows.length}
+              label="wallets"
+              onPage={setWalletPage}
+            />
           </section>
 
           <div className="grid gap-4">
-            <section className="flex min-h-[260px] flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
+            <section className="flex min-h-[520px] flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
               <div className="border-b border-[#1c222b] px-4 py-3">
                 <h2 className="text-sm font-medium">Live tape</h2>
                 <p className="text-xs text-[#8b95a3]">Buys and sells as they hit the feed</p>
               </div>
-              <ul className="flex-1 overflow-auto px-2 py-2">
+              <ul className="min-h-0 flex-1 overflow-auto px-2 py-2">
                 {data.tape.length === 0 ? (
                   <li className="px-2 py-8 text-center text-sm text-[#8b95a3]">Waiting for the next trade…</li>
                 ) : (
-                  data.tape.slice(0, 40).map((trade) => (
+                  pagedTape.map((trade) => (
                     <li key={trade.id} className="flex items-center gap-2 rounded-xl px-2 py-1.5">
                       <span
                         className={cn(
@@ -329,8 +361,15 @@ export const Tracker = () => {
                   ))
                 )}
               </ul>
+              <Pager
+                page={tapePage}
+                pageCount={tapePageCount}
+                total={data.tape.length}
+                label="trades"
+                onPage={setTapePage}
+              />
             </section>
-            <section className="flex min-h-[200px] flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
+            <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl bg-[#101216] ring-1 ring-[#232830]">
               <div className="border-b border-[#1c222b] px-4 py-3">
                 <h2 className="text-sm font-medium">Promotions</h2>
                 <p className="text-xs text-[#8b95a3]">When wallets become trackable or good</p>

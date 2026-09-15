@@ -58,7 +58,7 @@ const start = async () => {
 
   app.get("/tape", async (request) => {
     const query = request.query as { limit?: string };
-    const limit = Math.min(200, Math.max(20, Number(query.limit || 80)));
+    const limit = Math.min(400, Math.max(20, Number(query.limit || 400)));
     return { tape: listTape(limit) };
   });
 

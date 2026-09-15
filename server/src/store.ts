@@ -437,7 +437,7 @@ export const listWallets = (input?: { status?: WalletStatus; q?: string; include
   });
 };
 
-export const listTape = (limit = 80) =>
+export const listTape = (limit = 400) =>
   [...trades.values()]
     .sort((a, b) => b.tradedAt.localeCompare(a.tradedAt))
     .slice(0, limit)

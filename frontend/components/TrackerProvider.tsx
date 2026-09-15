@@ -71,7 +71,7 @@ export const TrackerProvider = ({ children }: { children: React.ReactNode }) => 
       setData((prev) => ({ ...prev, wallets: mergeWallet(prev.wallets, wallet) }));
     });
     socket.on("trade", (trade: TradeRow) => {
-      setData((prev) => ({ ...prev, tape: [trade, ...prev.tape].slice(0, 80) }));
+      setData((prev) => ({ ...prev, tape: [trade, ...prev.tape].slice(0, 400) }));
     });
     socket.on("event", (event: WalletEventRow) => {
       setData((prev) => ({ ...prev, events: [event, ...prev.events].slice(0, 40) }));
